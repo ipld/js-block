@@ -1,0 +1,35 @@
+{
+  "name": "@ipld/block",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "nyc --check-coverage --lines 100 --statements 100 --branches 100 --functions 100 aegir test",
+    "pretest": "aegir lint"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "devDependencies": {
+    "aegir": "^18.2.2",
+    "nyc": "^14.1.1",
+    "standard": "^12.0.1",
+    "tsame": "^2.0.1"
+  },
+  "dependencies": {
+    "@ipld/get-codec": "^1.0.3",
+    "cids": "~0.7.1",
+    "class-is": "^1.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipld/js-block.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ipld/js-block/issues"
+  },
+  "homepage": "https://github.com/ipld/js-block#readme",
+  "description": "IPLD Block interface"
+}
