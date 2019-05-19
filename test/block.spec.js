@@ -100,4 +100,13 @@ test('source', async () => {
   same(encoder.source(), null)
   let block = Block.decoder(Buffer.from('asd'), 'dag-json')
   same(block.source(), null)
+  encoder = Block.encoder({}, 'dag-json')
+  delete encoder.opts.source
+  same(encoder.source(), null)
+})
+
+test('reader', async () => {
+  let encoder = Block.encoder({ hello: 'world'}, 'dag-json')
+  let reader = await encoder.reader()
+  same(reader.get('hello').value, 'world')
 })
