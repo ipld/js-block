@@ -106,7 +106,7 @@ test('source', async () => {
 })
 
 test('reader', async () => {
-  let encoder = Block.encoder({ hello: 'world'}, 'dag-json')
+  let encoder = Block.encoder({ hello: 'world' }, 'dag-json')
   let reader = await encoder.reader()
   same(reader.get('hello').value, 'world')
 })
