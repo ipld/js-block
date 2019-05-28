@@ -6,7 +6,7 @@ decoding, cid creation w/ hashing.
 
 ## `Block.encoder(object, codec, algorithm = 'sha2-256')`
 
-Create a Block instance from either a native object.
+Create a Block instance from a native object.
 
 The `cid` as well as encoding will not happen until requested
 and then will be cached when appropriate.
