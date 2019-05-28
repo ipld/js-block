@@ -49,53 +49,20 @@ class Block {
     let data = await this.encode()
     return multihashing.validate(data, cid.multihash)
   }
-  async encode () {
-    return this.encodeMaybeSync()
-  }
-  encodeMaybeSync () {
+  encode () {
     if (this.opts.data) return this.opts.data
     let codec = module.exports.getCodec(this.codec)
-    if (codec.then) {
-      return codec.then(codec => {
-        return this._encodeData(codec)
-      })
-    } else {
-      return this._encodeData(codec)
-    }
-  }
-  _encodeData (codec) {
     let data = codec.encode(this.opts.source)
-    if (data.then) {
-      data.then(data => {
-        this.opts.data = data
-        return data
-      })
-    }
     this.opts.data = data
     return data
   }
-  async decode () {
-    return this.decodeMaybeSync()
-  }
-  decodeMaybeSync () {
+  decode () {
     let codec = module.exports.getCodec(this.codec)
-    if (codec.then) {
-      return codec.then(codec => this._decodeData(codec))
-    } else {
-      return this._decodeData(codec)
-    }
-  }
-  _decodeData (codec) {
-    if (!this.opts.data) {
-      let encoded = this._encodeData(codec)
-      if (encoded.then) {
-        return encoded.then(() => codec.decode(this.opts.data))
-      }
-    }
+    if (!this.opts.data) this.encode()
     return codec.decode(this.opts.data)
   }
-  async reader () {
-    let codec = await module.exports.getCodec(this.codec)
+  reader () {
+    let codec = module.exports.getCodec(this.codec)
     return codec.reader(this)
   }
 }

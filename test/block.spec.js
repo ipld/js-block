@@ -10,28 +10,28 @@ const test = it
 
 test('Block encode', async () => {
   let block = Block.encoder({ hello: 'world' }, 'dag-json')
-  let encoded = await block.encode()
+  let encoded = block.encode()
   assert.ok(Buffer.isBuffer(encoded))
-  same(encoded, await dagjson.encode({ hello: 'world' }))
+  same(encoded, dagjson.encode({ hello: 'world' }))
 })
 
 test('Block data caching', async () => {
   let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
-  let encoded = await block.encode()
+  let encoded = block.encode()
   encoded.test = true
-  assert.ok((await block.encode()).test)
+  assert.ok((block.encode()).test)
 })
 
 test('Block decode', async () => {
-  let data = await dagjson.encode({ hello: 'world' })
+  let data = dagjson.encode({ hello: 'world' })
   let block = Block.decoder(data, 'dag-json')
-  let decoded = await block.decode()
+  let decoded = block.decode()
   same(decoded, { hello: 'world' })
   block = Block.encoder({ hello: 'world' }, 'dag-json')
-  decoded = await block.decode()
+  decoded = block.decode()
   same(decoded, { hello: 'world' })
   // test data caching
-  decoded = await block.decode()
+  decoded = block.decode()
   same(decoded, { hello: 'world' })
   same(await block.validate(), true)
 })
@@ -54,40 +54,16 @@ test('Block cid', async () => {
   same(await block.validate(), false)
 })
 
-const testRaw = async () => {
+test('raw codec', async () => {
   let block = Block.encoder(Buffer.from('asdf'), 'raw')
-  let data = await block.encode()
+  let data = block.encode()
   same(data, Buffer.from('asdf'))
   block = Block.decoder(Buffer.from('asdf'), 'raw')
-  data = await block.decode()
+  data = block.decode()
   same(data, Buffer.from('asdf'))
   block = Block.encoder(Buffer.from('asdf'), 'raw')
-  data = await block.decode()
+  data = block.decode()
   same(data, Buffer.from('asdf'))
-}
-
-test('raw codec', async () => {
-  await testRaw()
-})
-
-test('async codec', async () => {
-  const asyncRaw = {
-    encode: async x => x,
-    decode: async x => x,
-    codec: 'raw'
-  }
-  let asyncModule = new Promise(resolve => resolve(asyncRaw))
-  asyncModule.codec = 'raw'
-  Block.getCodec.setCodec(asyncModule)
-  await testRaw()
-
-  Block.getCodec.setCodec(asyncRaw)
-  await testRaw()
-
-  let asyncRawModule = new Promise(resolve => resolve(asyncRaw))
-  asyncRawModule.codec = 'raw'
-  Block.getCodec.setCodec(asyncRawModule)
-  await testRaw()
 })
 
 test('source', async () => {
@@ -96,7 +72,7 @@ test('source', async () => {
   await encoder.cid()
   same(encoder.source(), null)
   encoder = Block.encoder({}, 'dag-json')
-  await encoder.encode()
+  encoder.encode()
   same(encoder.source(), null)
   let block = Block.decoder(Buffer.from('asd'), 'dag-json')
   same(block.source(), null)
