@@ -8,18 +8,20 @@ const tsame = require('tsame')
 const same = (...args) => assert.ok(tsame(...args))
 const test = it
 
-test('Block encode', async () => {
+test('Block encode', done => {
   let block = Block.encoder({ hello: 'world' }, 'dag-json')
   let encoded = block.encode()
   assert.ok(Buffer.isBuffer(encoded))
   same(encoded, dagjson.encode({ hello: 'world' }))
+  done()
 })
 
-test('Block data caching', async () => {
+test('Block data caching', done => {
   let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
   let encoded = block.encode()
   encoded.test = true
   assert.ok((block.encode()).test)
+  done()
 })
 
 test('Block decode', async () => {
@@ -54,7 +56,7 @@ test('Block cid', async () => {
   same(await block.validate(), false)
 })
 
-test('raw codec', async () => {
+test('raw codec', done => {
   let block = Block.encoder(Buffer.from('asdf'), 'raw')
   let data = block.encode()
   same(data, Buffer.from('asdf'))
@@ -64,6 +66,7 @@ test('raw codec', async () => {
   block = Block.encoder(Buffer.from('asdf'), 'raw')
   data = block.decode()
   same(data, Buffer.from('asdf'))
+  done()
 })
 
 test('source', async () => {
@@ -81,8 +84,9 @@ test('source', async () => {
   same(encoder.source(), null)
 })
 
-test('reader', async () => {
+test('reader', done => {
   let encoder = Block.encoder({ hello: 'world' }, 'dag-json')
-  let reader = await encoder.reader()
+  let reader = encoder.reader()
   same(reader.get('hello').value, 'world')
+  done()
 })

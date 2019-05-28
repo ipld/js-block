@@ -13,13 +13,13 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "aegir": "^18.2.2",
+    "aegir": "^19.0.3",
     "nyc": "^14.1.1",
     "standard": "^12.0.1",
     "tsame": "^2.0.1"
   },
   "dependencies": {
-    "@ipld/get-codec": "^2.0.0",
+    "@ipld/get-codec": "^2.0.1",
     "cids": "~0.7.1",
     "class-is": "^1.1.0"
   },
