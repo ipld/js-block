@@ -2,7 +2,7 @@
 const CID = require('cids')
 const getCodec = require('@ipld/get-codec')
 const withIs = require('class-is')
-const clone = o => Object.assign({}, o)
+const clone = require('ben-reilly')
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
