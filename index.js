@@ -25,49 +25,56 @@ class Block {
     opts = Object.assign({}, opts)
     Object.defineProperty(this, 'opts', readonly(opts))
   }
+
   source () {
     if (this.opts.cid || this.opts.data) return null
     if (!this.opts.source) return null
     return this.opts.source
   }
+
   async cid () {
     if (this.opts.cid) return this.opts.cid
-    let codec = this.codec
-    let hash = await multihashing(await this.encode(), this.opts.algo)
-    let cid = new CID(1, codec, hash)
+    const codec = this.codec
+    const hash = await multihashing(await this.encode(), this.opts.algo)
+    const cid = new CID(1, codec, hash)
     this.opts.cid = cid
     return cid
   }
+
   get codec () {
     if (this.opts.cid) return this.opts.cid.codec
     else return this.opts.codec
   }
+
   async validate () {
     // if we haven't created a CID yet we know it will be valid :)
     if (!this.opts.cid) return true
-    let cid = await this.cid()
-    let data = await this.encode()
+    const cid = await this.cid()
+    const data = await this.encode()
     return multihashing.validate(data, cid.multihash)
   }
+
   encode () {
     if (this.opts.data) return this.opts.data
-    let codec = module.exports.getCodec(this.codec)
-    let data = codec.encode(this.opts.source)
+    const codec = module.exports.getCodec(this.codec)
+    const data = codec.encode(this.opts.source)
     this.opts.data = data
     return data
   }
+
   decode () {
-    let codec = module.exports.getCodec(this.codec)
+    const codec = module.exports.getCodec(this.codec)
     if (!this.opts.data) this.encode()
     return codec.decode(this.opts.data)
   }
+
   reader () {
-    let codec = module.exports.getCodec(this.codec)
+    const codec = module.exports.getCodec(this.codec)
     return codec.reader(this)
   }
 }
 
-let BlockWithIs = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
+const BlockWithIs = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
 BlockWithIs.getCodec = getCodec
 
 BlockWithIs.encoder = (source, codec, algo) => new BlockWithIs({ source, codec, algo })

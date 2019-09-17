@@ -9,23 +9,23 @@ const same = (...args) => assert.ok(tsame(...args))
 const test = it
 
 test('Block encode', done => {
-  let block = Block.encoder({ hello: 'world' }, 'dag-json')
-  let encoded = block.encode()
+  const block = Block.encoder({ hello: 'world' }, 'dag-json')
+  const encoded = block.encode()
   assert.ok(Buffer.isBuffer(encoded))
   same(encoded, dagjson.encode({ hello: 'world' }))
   done()
 })
 
 test('Block data caching', done => {
-  let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
-  let encoded = block.encode()
+  const block = Block.encoder({ hello: 'world' }, 'dag-cbor')
+  const encoded = block.encode()
   encoded.test = true
   assert.ok((block.encode()).test)
   done()
 })
 
 test('Block decode', async () => {
-  let data = dagjson.encode({ hello: 'world' })
+  const data = dagjson.encode({ hello: 'world' })
   let block = Block.decoder(data, 'dag-json')
   let decoded = block.decode()
   same(decoded, { hello: 'world' })
@@ -77,7 +77,7 @@ test('source', async () => {
   encoder = Block.encoder({}, 'dag-json')
   encoder.encode()
   same(encoder.source(), null)
-  let block = Block.decoder(Buffer.from('asd'), 'dag-json')
+  const block = Block.decoder(Buffer.from('asd'), 'dag-json')
   same(block.source(), null)
   encoder = Block.encoder({}, 'dag-json')
   delete encoder.opts.source
@@ -85,8 +85,8 @@ test('source', async () => {
 })
 
 test('reader', done => {
-  let encoder = Block.encoder({ hello: 'world' }, 'dag-json')
-  let reader = encoder.reader()
+  const encoder = Block.encoder({ hello: 'world' }, 'dag-json')
+  const reader = encoder.reader()
   same(reader.get('hello').value, 'world')
   done()
 })

@@ -32,6 +32,6 @@ test('data only', async () => {
 })
 
 test('set opts', async () => {
-  let block = Block.encoder({}, 'dag-cbor')
+  const block = Block.encoder({}, 'dag-cbor')
   await tryError(() => { block.opts = 'asdf' }, 'Cannot set read-only property')
 })

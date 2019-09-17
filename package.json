@@ -6,23 +6,22 @@
     "test": "test"
   },
   "scripts": {
-    "test": "nyc --check-coverage --lines 100 --statements 100 --branches 100 --functions 100 aegir test",
+    "test": "hundreds aegir test -t node browser",
     "pretest": "aegir lint"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "aegir": "^19.0.3",
-    "nyc": "^14.1.1",
-    "standard": "^12.0.1",
+    "aegir": "^20.2.0",
+    "hundreds": "0.0.2",
     "tsame": "^2.0.1"
   },
   "dependencies": {
-    "@ipld/get-codec": "^2.0.2",
+    "@ipld/get-codec": "^2.0.5",
     "cids": "~0.7.1",
     "class-is": "^1.1.0",
-    "multihashing-async": "^0.7.0"
+    "multihashing-async": "^0.8.0"
   },
   "repository": {
     "type": "git",
