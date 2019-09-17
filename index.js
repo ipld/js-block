@@ -2,6 +2,7 @@
 const CID = require('cids')
 const getCodec = require('@ipld/get-codec')
 const withIs = require('class-is')
+const clone = o => Object.assign({}, o)
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
@@ -27,7 +28,8 @@ class Block {
   }
 
   source () {
-    if (this.opts.cid || this.opts.data) return null
+    if (this.opts.cid || this.opts.data ||
+        this._encoded || this._decoded) return null
     if (!this.opts.source) return null
     return this.opts.source
   }
@@ -54,18 +56,37 @@ class Block {
     return multihashing.validate(data, cid.multihash)
   }
 
-  encode () {
-    if (this.opts.data) return this.opts.data
+  _encode () {
     const codec = module.exports.getCodec(this.codec)
-    const data = codec.encode(this.opts.source)
-    this.opts.data = data
-    return data
+    this._encoded = this.opts.data || codec.encode(this.opts.source)
+  }
+
+  encode () {
+    if (!this._encoded) this._encode()
+    const buff = Buffer.allocUnsafe(this._encoded.length)
+    this._encoded.copy(buff)
+    return buff
+  }
+
+  encodeUnsafe () {
+    if (!this._encoded) this._encode()
+    return this._encoded
+  }
+
+  _decode () {
+    const codec = module.exports.getCodec(this.codec)
+    if (this.opts.source) this._decoded = this.opts.source
+    else this._decoded = codec.decode(this._encoded || this.opts.data)
   }
 
   decode () {
-    const codec = module.exports.getCodec(this.codec)
-    if (!this.opts.data) this.encode()
-    return codec.decode(this.opts.data)
+    if (!this._decoded) this._decode()
+    return clone(this._decoded)
+  }
+
+  decodeUnsafe () {
+    if (!this._decoded) this._decode()
+    return this._decoded
   }
 
   reader () {
