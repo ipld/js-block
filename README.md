@@ -45,10 +45,20 @@ immutable.
 
 ### `block.decode()`
 
-Promise that resolves to a native JavaScript object decoded from the block data.
+Returns decoded block data.
 
-A new object is returned on every call. The decoding is not cached because it is
-likely to be mutated by the consumer.
+A new object is returned on every call that is copied from a cached version of
+the decoded block. This means you are free to mutate the return value and
+that we'll never do more than one actual block decode in the codec.
+
+### `block.decodeUnsafe()`
+
+Returns the cached block data directly.
+
+**Waring: If you mutate the return value bad things will happen.**
+
+This operation is very fast and useful as long as you can ensure the return value
+will not be mutated.
 
 ### `block.cid()`
 
@@ -56,7 +66,19 @@ Promise that resolves to a `cid` instance. Cached after creation.
 
 ### `block.encode()`
 
-Promise that resolves to a `Buffer` instance encoded from the source input.
+Returns a `Buffer` instance encoded from the source input.
+
+The first time the block is encoded it is cached indefinitely. This method returns
+a new copied buffer that you are free to mutate.
+
+### `block.encodeUnsafe()`
+
+Returns a `Buffer` instance encoded from the source input.
+
+**Warning: If you mutate the return value bad things will happen.**
+
+This returns the internal cached versoin of the block encode. It's very fast
+and useful if you are certain the buffer won't be mutated.
 
 ### `block.reader()`
 
