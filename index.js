@@ -2,11 +2,25 @@
 const CID = require('cids')
 const getCodec = require('@ipld/get-codec')
 const withIs = require('class-is')
-const clone = require('ben-reilly')
+const transform = require('lodash.transform')
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
 const multihashing = require('multihashing-async')
+
+const clone = obj => transform(obj, (result, value, key) => {
+  if (CID.isCID(value)) {
+    result[key] = value
+  } else if (Buffer.isBuffer(value)) {
+    const b = Buffer.allocUnsafe(value.length)
+    value.copy(b)
+    result[key] = b
+  } else if (typeof value === 'object' && value !== null) {
+    result[key] = clone(value)
+  } else {
+    result[key] = value
+  }
+})
 
 class Block {
   constructor (opts) {

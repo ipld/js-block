@@ -4,6 +4,7 @@ const Block = require('../')
 const dagjson = require('@ipld/dag-json')
 const assert = require('assert')
 const tsame = require('tsame')
+const CID = require('cids')
 
 const same = (...args) => assert.ok(tsame(...args))
 const test = it
@@ -99,5 +100,14 @@ test('decode cache', done => {
   block.decode().test = false
   assert.ok(block.decode().test)
   assert.ok(block.decodeUnsafe().test)
+  done()
+})
+
+test('decode deep object', done => {
+  const cid = new CID('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
+  const o = { a: { b: [cid], c: Buffer.from('x') } }
+  const block = Block.encoder(o, 'dag-json')
+  const decoded = block.decode()
+  same(decoded, o)
   done()
 })
