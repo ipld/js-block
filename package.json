@@ -1,6 +1,6 @@
 {
   "name": "@ipld/block",
-  "version": "0.0.0-dev",
+  "version": "2.1.0",
   "main": "index.js",
   "directories": {
     "test": "test"
