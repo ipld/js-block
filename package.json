@@ -15,6 +15,7 @@
   "devDependencies": {
     "aegir": "^20.2.0",
     "hundreds": "0.0.2",
+    "ipld-dag-pb": "^0.18.1",
     "tsame": "^2.0.1"
   },
   "dependencies": {
