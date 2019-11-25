@@ -48,6 +48,11 @@ class Block {
     return this.opts.source
   }
 
+  _clone (obj) {
+    if (this.codec !== 'dag-pb') return clone(obj)
+    else return obj
+  }
+
   async cid () {
     if (this.opts.cid) return this.opts.cid
     const codec = this.codec
@@ -95,7 +100,7 @@ class Block {
 
   decode () {
     if (!this._decoded) this._decode()
-    return clone(this._decoded)
+    return this._clone(this._decoded)
   }
 
   decodeUnsafe () {
