@@ -91,9 +91,11 @@ class Block {
     const codec = module.exports.getCodec(this.codec)
     if (this.opts.source) this._decoded = this.opts.source
     else this._decoded = codec.decode(this._encoded || this.opts.data)
+    return this._decoded
   }
 
   decode () {
+    if (this.codec === 'dag-pb') return this._decode()
     if (!this._decoded) this._decode()
     return clone(this._decoded)
   }

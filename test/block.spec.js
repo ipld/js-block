@@ -5,6 +5,8 @@ const dagjson = require('@ipld/dag-json')
 const assert = require('assert')
 const tsame = require('tsame')
 const CID = require('cids')
+const dagPB = require('ipld-dag-pb')
+const DAGNode = dagPB.DAGNode
 
 const same = (...args) => assert.ok(tsame(...args))
 const test = it
@@ -109,5 +111,15 @@ test('decode deep object', done => {
   const block = Block.encoder(o, 'dag-json')
   const decoded = block.decode()
   same(decoded, o)
+  done()
+})
+
+test('dag-pb encode/decode', done => {
+  const node = new DAGNode(Buffer.from('some data'))
+  const block = Block.encoder(node, 'dag-pb')
+  const encoded = block.encode()
+  const decoded = block.decode()
+  same(encoded, Block.decoder(encoded, 'dag-pb').encode())
+  same(decoded._data, Buffer.from('some data'))
   done()
 })
