@@ -6,16 +6,20 @@
     "test": "test"
   },
   "scripts": {
-    "test": "hundreds aegir test -t node browser",
-    "pretest": "aegir lint"
+    "lint": "standard",
+    "test:node": "hundreds mocha tests/test-*.js",
+    "test:browser": "polendina --cleanup tests/test-*.js",
+    "test": "npm run lint && npm run test:node && npm run test:browser"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "aegir": "^20.2.0",
     "hundreds": "0.0.2",
     "ipld-dag-pb": "^0.18.1",
+    "mocha": "^6.2.2",
+    "polendina": "0.0.0",
+    "standard": "^14.3.1",
     "tsame": "^2.0.1"
   },
   "dependencies": {
