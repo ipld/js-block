@@ -7,13 +7,9 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build
-      with:
-        entrypoint: npm
-        args: install
+      run: npm install
     - name: Test
-      with:
-        entrypoint: npm
-        args: test
+      run: npm test
     - name: Publish
       if: github.ref == 'refs/heads/master'
       uses: mikeal/merge-release@master
