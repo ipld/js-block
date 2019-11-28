@@ -93,4 +93,3 @@ Returns true/false if the CID's multihash matches the given block.
 If a CID hasn't been created yet it will return true since we know the hash will
 match in our eventually created CID.
 
-
