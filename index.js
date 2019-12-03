@@ -98,8 +98,8 @@ class Block {
   decode () {
     if (this.codec === 'dag-pb') return this._decode()
     if (!this._decoded) this._decode()
-    const tt = this._decoded
-    if (typeof tt === 'number' || typeof tt === 'boolean') {
+    const tt = typeof this._decoded
+    if (tt === 'number' || tt === 'boolean') {
       // return any immutable types
       return this._decoded
     }
