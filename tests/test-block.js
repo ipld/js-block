@@ -114,6 +114,22 @@ test('decode deep object', done => {
   done()
 })
 
+test('decode of immutable types', done => {
+  let block = Block.encoder(1, 'dag-json')
+  same(block.decode(), 1)
+  block = Block.encoder(true, 'dag-json')
+  same(block.decode(), true)
+  done()
+})
+
+test('safe clone of buffers', done => {
+  const block = Block.encoder(Buffer.from('test'), 'raw')
+  const decoded = block.decode()
+  decoded[0] = 'd'.charCodeAt(0)
+  same(block.decode().toString(), 'test')
+  done()
+})
+
 test('dag-pb encode/decode', done => {
   const node = new DAGNode(Buffer.from('some data'))
   const block = Block.encoder(node, 'dag-pb')
