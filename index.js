@@ -25,7 +25,8 @@ const clone = obj => transform(obj, (result, value, key) => {
 class Block {
   constructor (opts) {
     if (!opts) throw new Error('Block options are required')
-    if (!opts.source && !opts.data) {
+    if (typeof opts.source === 'undefined' &&
+        typeof opts.data === 'undefined') {
       throw new Error('Block instances must be created with either an encode source or data')
     }
     if (opts.source && !opts.codec) {
@@ -97,6 +98,12 @@ class Block {
   decode () {
     if (this.codec === 'dag-pb') return this._decode()
     if (!this._decoded) this._decode()
+    const tt = typeof this._decoded
+    if (tt === 'number' || tt === 'boolean') {
+      // return any immutable types
+      return this._decoded
+    }
+    if (Buffer.isBuffer(this._decoded)) return Buffer.from(this._decoded)
     return clone(this._decoded)
   }
 
