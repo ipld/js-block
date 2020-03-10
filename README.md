@@ -6,6 +6,24 @@ The `Block` API is the single endpoint for authoring IPLD data structures. Unles
 implementing a new codec you can get everything you need from the Block API: encoding, 
 decoding, cid creation w/ hashing.
 
+```javascript
+const block = require('@ipld/block')
+
+const b1 = Block.encoder({ hello: 'world' }, 'dag-cbor')
+
+// link between blocks
+const b2 = Block.encoder({ head: await b1.cid() }, 'dag-cbor')
+
+// write to a standard key value store
+for (const block of [b1, b2]) {
+  const cid = await block.cid()
+  await put(cid.toString('base64'), block.encode()) 
+}
+
+// write to a store that understands the Block interface
+await Promise.all([put(b1), put(b2)])
+```
+
 ## `Block.encoder(object, codec, algorithm = 'sha2-256')`
 
 Create a Block instance from a native object.
