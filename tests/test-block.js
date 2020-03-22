@@ -139,3 +139,13 @@ test('dag-pb encode/decode', done => {
   same(decoded._data, Buffer.from('some data'))
   done()
 })
+
+test('block equals', async () => {
+  const block1 = Block.encoder({ hello: 'world' }, 'dag-cbor')
+  const block2 = Block.encoder({ hello: 'world' }, 'dag-cbor')
+  const block3 = Block.encoder('hello world', 'dag-cbor')
+  same(await block1.equals(block1), true)
+  same(await block1.equals(await block1.cid()), true)
+  same(await block1.equals(block2), true)
+  same(await block1.equals(block3), false)
+})

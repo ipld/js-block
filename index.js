@@ -116,6 +116,13 @@ class Block {
     const codec = module.exports.getCodec(this.codec)
     return codec.reader(this)
   }
+
+  async equals (block) {
+    if (block === this) return true
+    const cid = await this.cid()
+    if (CID.isCID(block)) return cid.equals(block)
+    return cid.equals(await block.cid())
+  }
 }
 
 const BlockWithIs = withIs(Block, { className: 'Block', symbolName: '@ipld/block' })
