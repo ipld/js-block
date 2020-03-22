@@ -1,7 +1,7 @@
 {
   "name": "@ipld/block",
   "version": "2.1.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },
@@ -10,6 +10,9 @@
     "test:node": "hundreds mocha tests/test-*.js",
     "test:browser": "polendina --cleanup tests/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser"
+  },
+  "browser": {
+    "./src/codecs/defaults.js": "./src/codecs/defaults-browser.js"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
