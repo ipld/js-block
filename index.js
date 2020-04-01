@@ -1,4 +1,5 @@
 'use strict'
+const { Buffer } = require('buffer')
 const CID = require('cids')
 const getCodec = require('@ipld/get-codec')
 const withIs = require('class-is')
