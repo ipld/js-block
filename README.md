@@ -1,6 +1,6 @@
 # Block API
 
-![189707](https://img.shields.io/badge/compiled%20bundle-190k-yellow) ![60728](https://img.shields.io/badge/gzipped%20bundle-61k-yellowgreen)
+![200846](https://img.shields.io/badge/compiled%20bundle-201k-yellow) ![63080](https://img.shields.io/badge/gzipped%20bundle-63k-yellowgreen)
 
 The `Block` API is the single endpoint for authoring IPLD data structures. Unless you're
 implementing a new codec you can get everything you need from the Block API: encoding, 
