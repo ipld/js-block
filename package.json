@@ -16,19 +16,19 @@
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
     "hundreds": "0.0.2",
-    "ipld-dag-pb": "^0.18.1",
-    "mocha": "^6.2.2",
-    "polendina": "0.0.0",
-    "standard": "^14.3.1",
+    "ipld-dag-pb": "^0.18.3",
+    "mocha": "^7.1.1",
+    "polendina": "1.0.0",
+    "standard": "^14.3.3",
     "tsame": "^2.0.1"
   },
   "dependencies": {
-    "@ipld/get-codec": "^2.0.5",
+    "@ipld/get-codec": "^3.0.0",
     "buffer": "^5.5.0",
-    "cids": "~0.7.1",
+    "cids": "~0.8.0",
     "class-is": "^1.1.0",
     "lodash.transform": "^4.6.0",
-    "multihashing-async": "^0.8.0"
+    "multihashing-async": "^0.8.1"
   },
   "repository": {
     "type": "git",
