@@ -1,13 +1,15 @@
 'use strict'
 const { Buffer } = require('buffer')
 const CID = require('cids')
-const getCodec = require('@ipld/get-codec')
+const getCodec = require('../js-get-codec')
 const withIs = require('class-is')
 const transform = require('lodash.transform')
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
 
 const multihashing = require('multihashing-async')
+
+const immutableTypes = new Set(['number', 'string', 'boolean'])
 
 const clone = obj => transform(obj, (result, value, key) => {
   if (CID.isCID(value)) {
@@ -105,6 +107,9 @@ class Block {
       return this._decoded
     }
     if (Buffer.isBuffer(this._decoded)) return Buffer.from(this._decoded)
+    if (immutableTypes.has(typeof this._decoded) || this._decoded === null) {
+      return this._decoded
+    }
     return clone(this._decoded)
   }
 

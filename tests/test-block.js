@@ -3,12 +3,11 @@
 const Block = require('../')
 const dagjson = require('@ipld/dag-json')
 const assert = require('assert')
-const tsame = require('tsame')
 const CID = require('cids')
 const dagPB = require('ipld-dag-pb')
 const DAGNode = dagPB.DAGNode
 
-const same = (...args) => assert.ok(tsame(...args))
+const same = assert.deepStrictEqual
 const test = it
 
 test('Block encode', done => {
@@ -16,6 +15,26 @@ test('Block encode', done => {
   const encoded = block.encode()
   assert.ok(Buffer.isBuffer(encoded))
   same(encoded, dagjson.encode({ hello: 'world' }))
+  done()
+})
+
+test('native types', done => {
+  const block = Block.encoder('foo', 'dag-cbor')
+  const encoded = block.encode()
+  assert.ok(Buffer.isBuffer(encoded))
+  const flip = obj => {
+    const encoded = Block.encoder(obj, 'dag-cbor').encode()
+    return Block.decoder(encoded, 'dag-cbor').decode()
+  }
+  same(flip('test'), 'test')
+  same(flip(null), null)
+  same(flip(12), 12)
+  same(flip(-1), -1)
+  same(flip(1.2), 1.2)
+  same(flip(true), true)
+  same(flip(false), false)
+  same(flip([]), [])
+  same(flip(['asdf']), ['asdf'])
   done()
 })
 
