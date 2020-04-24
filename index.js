@@ -1,7 +1,7 @@
 'use strict'
 const { Buffer } = require('buffer')
 const CID = require('cids')
-const getCodec = require('../js-get-codec')
+const getCodec = require('@ipld/get-codec')
 const withIs = require('class-is')
 const transform = require('lodash.transform')
 
