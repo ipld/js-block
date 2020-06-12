@@ -1,10 +1,11 @@
 'use strict'
 /* globals it */
-const Block = require('../')
-const assert = require('assert')
-const tsame = require('tsame')
+import createBlock from '../index.js'
+import multiformats from 'multiformats/basics.js'
+import assert from 'assert'
 
-const same = (...args) => assert.ok(tsame(...args))
+const Block = createBlock(multiformats)
+const same = assert.deepStrictEqual
 const test = it
 
 const tryError = async (fn, message) => {
@@ -32,6 +33,6 @@ test('data only', async () => {
 })
 
 test('set opts', async () => {
-  const block = Block.encoder({}, 'dag-cbor')
+  const block = Block.encoder({}, 'json')
   await tryError(() => { block.opts = 'asdf' }, 'Cannot set read-only property')
 })
