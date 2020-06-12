@@ -72,6 +72,7 @@ const create = multiformats => {
       }
       return this.opts.codec
     }
+
     get code () {
       if (!this.opts.code) {
         this.opts.code = multicodec.get(this.codec).code

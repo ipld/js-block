@@ -11,15 +11,14 @@
     "test:node": "hundreds mocha tests/test-*.js",
     "test:browser": "polendina --cleanup tests/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser",
-    "coverage":  "c8 --reporter=html mocha tests/test-*.js && npx st -d coverage -p 8080"
-
+    "coverage": "c8 --reporter=html mocha tests/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
     "@ipld/dag-cbor": "0.0.0",
-    "@ipld/dag-json": "^3.0.1",
+    "@ipld/dag-json": "^3.0.2",
     "hundreds": "0.0.4",
     "mocha": "^8.0.1",
     "multiformats": "^1.0.4",
