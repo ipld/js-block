@@ -24,7 +24,7 @@ for (const codec of [dagjson]) {
   const { name, code } = codec(multiformats)
   describe(name, () => {
     for (const id of [name, code]) {
-      describe(`w/ ${ typeof id === 'string' ? 'name' : 'code'}`, () => {
+      describe(`w/ ${typeof id === 'string' ? 'name' : 'code'}`, () => {
         test('Block encode', done => {
           const block = Block.encoder({ hello: 'world' }, id)
           const encoded = block.encodeUnsafe()
@@ -137,7 +137,7 @@ for (const codec of [dagjson]) {
         })
 
         test('validate', async () => {
-          let block = Block.encoder({ hello: 'world'}, id)
+          let block = Block.encoder({ hello: 'world' }, id)
           const encoded = block.encode()
           const cid = await block.cid()
           block = Block.create(encoded, cid)
