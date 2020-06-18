@@ -28,7 +28,6 @@ for (const codec of [dagjson, dagcbor]) {
         test('Block encode', done => {
           const block = Block.encoder({ hello: 'world' }, id)
           const encoded = block.encodeUnsafe()
-          console.log({encoded})
           assert.ok(isBinary(encoded))
           const comp = multicodec.encode({ hello: 'world' }, id)
           same(encoded, comp)
