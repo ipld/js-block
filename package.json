@@ -17,11 +17,11 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "@ipld/dag-cbor": "0.0.0",
+    "@ipld/dag-cbor": "1.0.1",
     "@ipld/dag-json": "^3.0.2",
-    "hundreds": "0.0.4",
+    "hundreds": "0.0.7",
     "mocha": "^8.0.1",
-    "multiformats": "^1.0.4",
+    "multiformats": "^1.0.7",
     "polendina": "1.0.0",
     "standard": "^14.3.4"
   },

@@ -3,7 +3,7 @@
 import multiformats from 'multiformats/basics.js'
 import create from '../index.js'
 import dagjson from '@ipld/dag-json'
-// import dagcbor from '@ipld/dag-cbor'
+import dagcbor from '@ipld/dag-cbor'
 import base58 from 'multiformats/bases/base58.js'
 import assert from 'assert'
 
@@ -19,7 +19,7 @@ const test = it
 
 multibase.add(base58)
 
-for (const codec of [dagjson]) {
+for (const codec of [dagjson, dagcbor]) {
   multiformats.add(codec)
   const { name, code } = codec(multiformats)
   describe(name, () => {
@@ -28,6 +28,7 @@ for (const codec of [dagjson]) {
         test('Block encode', done => {
           const block = Block.encoder({ hello: 'world' }, id)
           const encoded = block.encodeUnsafe()
+          console.log({encoded})
           assert.ok(isBinary(encoded))
           const comp = multicodec.encode({ hello: 'world' }, id)
           same(encoded, comp)
@@ -171,7 +172,6 @@ describe('raw', () => {
   })
 })
 
-/*
 describe('cid()', () => {
   test('Block cid', async () => {
     let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
@@ -191,7 +191,6 @@ describe('cid()', () => {
     same(await block.validate(), false)
   })
 })
-*/
 
 /*
 describe('dag-pb', () => {
