@@ -40,7 +40,7 @@
     "url": "https://github.com/ipld/js-block/issues"
   },
   "exports": {
-    "require": "./dist/bundle.js"
+    "require": "./dist/bundle.cjs"
   },
   "homepage": "https://github.com/ipld/js-block#readme",
   "description": "IPLD Block interface"
