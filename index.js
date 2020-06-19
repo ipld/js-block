@@ -63,6 +63,8 @@ const create = multiformats => {
       const hash = await multihash.hash(this.encodeUnsafe(), this.opts.algo)
       const cid = new CID(1, this.code, hash)
       this.opts.cid = cid
+      // https://github.com/bcoe/c8/issues/135
+      /* c8 ignore next */
       return cid
     }
 
@@ -88,6 +90,8 @@ const create = multiformats => {
       if (!this.opts.cid) return true
       const cid = await this.cid()
       const data = this.encodeUnsafe()
+      // https://github.com/bcoe/c8/issues/135
+      /* c8 ignore next */
       return multihash.validate(cid.multihash, data)
     }
 
@@ -147,6 +151,8 @@ const create = multiformats => {
       if (block === this) return true
       const cid = await this.cid()
       if (CID.isCID(block)) return cid.equals(block)
+      // https://github.com/bcoe/c8/issues/135
+      /* c8 ignore next */
       return cid.equals(await block.cid())
     }
   }
