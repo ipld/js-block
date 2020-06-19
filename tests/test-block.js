@@ -34,7 +34,7 @@ for (const codec of [dagjson, dagcbor]) {
           done()
         })
 
-        test('native types', done => {
+        describe('native types', () => {
           const block = Block.encoder('foo', id)
           const encoded = block.encode()
           assert.ok(isBinary(encoded))
@@ -42,16 +42,20 @@ for (const codec of [dagjson, dagcbor]) {
             const encoded = Block.encoder(obj, id).encode()
             return Block.decoder(encoded, id).decode()
           }
-          same(flip('test'), 'test')
-          same(flip(null), null)
-          same(flip(12), 12)
-          same(flip(-1), -1)
-          same(flip(1.2), 1.2)
-          same(flip(true), true)
-          same(flip(false), false)
-          same(flip([]), [])
-          same(flip(['asdf']), ['asdf'])
-          done()
+          const _tests = [
+            ['string', 'test'],
+            ['null', null],
+            ['int', 12],
+            ['uint', -1],
+            ['float', 1.2],
+            ['true', true],
+            ['false', false],
+            ['empty array', []],
+            ['array', ['asdf']]
+          ]
+          for (const [name, value] of _tests) {
+            test(name, () => same(flip(value), value))
+          }
         })
 
         test('Block data caching', done => {
@@ -129,11 +133,21 @@ for (const codec of [dagjson, dagcbor]) {
         test('block equals', async () => {
           const block1 = Block.encoder({ hello: 'world' }, id)
           const block2 = Block.encoder({ hello: 'world' }, id)
+          const cid1 = await block1.cid()
+          const cid2 = await block2.cid()
+          same(cid1.equals(cid2), true)
+          const e1 = block1.encode()
+          same(e1, block1.encodeUnsafe())
+          const e2 = block2.encode()
+          same(e2, block2.encodeUnsafe())
+          same(e1, e2)
           const block3 = Block.encoder('hello world', id)
+          const block4 = Block.decoder(e1, id)
           same(await block1.equals(block1), true)
           same(await block1.equals(await block1.cid()), true)
           same(await block1.equals(block2), true)
           same(await block1.equals(block3), false)
+          same(await block1.equals(block4), true)
         })
 
         test('validate', async () => {
@@ -176,18 +190,25 @@ describe('cid()', () => {
     let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
     let cid = await block.cid()
     same(cid.toString('base58btc'), 'zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
-    block = Block.encoder({ hello: 'world' }, 'dag-cbor', 'sha1')
+    block = Block.encoder({ hello: 'world' }, 'dag-cbor', 'sha2-512')
     cid = await block.cid()
-    same(cid.toString('base58btc'), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
-    block = Block.create(await block.encode(), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
-    same((await block.cid()).toString('base58btc'), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+    same(cid.toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    block = Block.create(await block.encode(), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    same((await block.cid()).toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     same(block.codec, 'dag-cbor')
     same(await block.validate(), true)
     block = Block.create(await block.encode(), cid)
-    same((await block.cid()).toString('base58btc'), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
+    same((await block.cid()).toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     same(block.codec, 'dag-cbor')
-    block = Block.create(fromString('asdf'), 'z8d8Cu56HEXrUTgRbLdkfRrood2EhZyyL')
-    same(await block.validate(), false)
+    block = Block.create(fromString('asdf'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    let threw = true
+    try {
+      await block.validate()
+      threw = false
+    } catch (e) {
+      if (e.message !== 'Buffer does not match hash') throw e
+    }
+    same(threw, true)
   })
 })
 

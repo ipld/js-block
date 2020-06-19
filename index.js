@@ -9,7 +9,10 @@ const immutableTypes = new Set(['number', 'string', 'boolean'])
 const create = multiformats => {
   const { bytes, CID, multihash, multicodec } = multiformats
   const { coerce, isBinary } = bytes
-  const copyBinary = value => coerce(coerce(value).buffer.slice(0))
+  const copyBinary = value => {
+    const b = coerce(value)
+    return coerce(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength))
+  }
   const reader = createReader(multiformats)
 
   const clone = obj => transform(obj, (result, value, key) => {
@@ -57,7 +60,7 @@ const create = multiformats => {
 
     async cid () {
       if (this.opts.cid) return this.opts.cid
-      const hash = await multihash.hash(this.encode(), this.opts.algo)
+      const hash = await multihash.hash(this.encodeUnsafe(), this.opts.algo)
       const cid = new CID(1, this.code, hash)
       this.opts.cid = cid
       return cid
@@ -116,6 +119,7 @@ const create = multiformats => {
       // TODO: once we upgrade to the latest data model version of
       // dag-pb that @gozala wrote we should be able to remove this
       // and treat it like every other codec.
+      /* c8 ignore next */
       if (this.codec === 'dag-pb') return this._decode()
       if (!this._decoded) this._decode()
       const tt = typeof this._decoded
