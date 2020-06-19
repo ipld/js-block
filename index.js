@@ -158,6 +158,8 @@ const create = multiformats => {
     if (typeof cid === 'string') cid = new CID(cid)
     return new BlockWithIs({ data, cid })
   }
+  BlockWithIs.multiformats = multiformats
+  BlockWithIs.CID = CID
   return BlockWithIs
 }
 

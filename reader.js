@@ -54,15 +54,10 @@ export default multiformats => {
   }
   /* eslint-enable max-depth */
 
-  const readonly = () => {
-    throw new Error('Read-only property')
-  }
-
   class Reader {
     constructor (decoded) {
       Object.defineProperty(this, 'decoded', {
-        get: () => decoded,
-        set: readonly
+        get: () => decoded
       })
     }
 
