@@ -1,5 +1,6 @@
 /* globals it */
 const assert = require('assert')
+const mf = require('multiformats')
 const create = require('@ipld/block')
 const BasicBlock = require('@ipld/block/basics.js')
 const DefaultBlock = require('@ipld/block/defaults.js')
