@@ -11,8 +11,9 @@
     "prepublishOnly": "npm run build",
     "lint": "standard",
     "test:node": "hundreds mocha tests/test-*.js",
+    "test:cjs": "npm run build && mocha tests/cjs/test.cjs",
     "test:browser": "polendina --cleanup tests/test-*.js",
-    "test": "npm run lint && npm run test:node && npm run test:browser",
+    "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha tests/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
@@ -27,10 +28,10 @@
     "standard": "^14.3.4"
   },
   "dependencies": {
-    "@ipld/dag-cbor": "1.0.6",
+    "@ipld/dag-cbor": "1.1.1",
     "class-is": "^1.1.0",
     "lodash.transform": "^4.6.0",
-    "multiformats": "^1.0.7"
+    "multiformats": "^1.1.2"
   },
   "repository": {
     "type": "git",
@@ -40,7 +41,18 @@
     "url": "https://github.com/ipld/js-block/issues"
   },
   "exports": {
-    "require": "./dist/bundle.cjs"
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./index.js"
+    },
+    "./basics.js": {
+      "require": "./dist/basics.cjs",
+      "import": "./basics.js"
+    },
+    "./defaults.js": {
+      "require": "./dist/defaults.cjs",
+      "import": "./defaults.js"
+    }
   },
   "homepage": "https://github.com/ipld/js-block#readme",
   "description": "IPLD Block interface"
