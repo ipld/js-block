@@ -11,7 +11,7 @@
     "prepublishOnly": "npm run build",
     "lint": "standard",
     "test:node": "hundreds mocha tests/test-*.js",
-    "test:cjs": "npm run build && mocha tests/cjs/test.cjs",
+    "test:cjs": "npm run build && mocha dist/tests/test-*.cjs",
     "test:browser": "polendina --cleanup tests/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha tests/test-*.js && npx st -d coverage -p 8080"
@@ -20,7 +20,8 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "@ipld/dag-json": "^3.0.5",
+    "@ipld/dag-json": "^3.0.7",
+    "globby": "^11.0.1",
     "hundreds": "0.0.7",
     "mocha": "^8.0.1",
     "polendina": "1.0.0",
@@ -28,10 +29,10 @@
     "standard": "^14.3.4"
   },
   "dependencies": {
-    "@ipld/dag-cbor": "1.1.1",
+    "@ipld/dag-cbor": "1.1.2",
     "class-is": "^1.1.0",
     "lodash.transform": "^4.6.0",
-    "multiformats": "^1.1.2"
+    "multiformats": "^1.1.6"
   },
   "repository": {
     "type": "git",
