@@ -1,29 +1,11 @@
-import globby from 'globby'
-import path from 'path'
+import { readdirSync, readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
-let configs = [
-  {
-    input: 'defaults.js',
-    output: {
-      file: 'dist/defaults.cjs',
-      format: 'cjs'
-    }
-  },
-  {
-    input: 'index.js',
-    output: {
-      file: 'dist/index.cjs',
-      format: 'cjs'
-    }
-  },
-  {
-    input: 'basics.js',
-    output: {
-      file: 'dist/basics.cjs',
-      format: 'cjs'
-    }
-  }
-]
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json')))
 
 const relativeToMain = name => ({
   name: 'relative-to-main',
@@ -38,18 +20,15 @@ const relativeToMain = name => ({
   }
 })
 
-const plugins = [relativeToMain('@ipld/block')]
-const add = (pattern) => {
-  configs = configs.concat(globby.sync(pattern).map(inputFile => ({
-    input: inputFile,
-    output: {
-      plugins,
-      file: path.join('dist', inputFile).replace('.js', '.cjs'),
-      format: 'cjs'
-    }
-  })))
-}
-add('test/*.js')
+const plugins = [relativeToMain(pkg.name)]
+const dir = 'dist'
+const output = { dir, plugins, format: 'cjs', entryFileNames: '[name].cjs' }
+const testdir = join(__dirname, 'test')
+const filter = name => name.startsWith('test-')
+const createConfig = f => ({ input: join('test', f), output })
+
+const configs = readdirSync(testdir).filter(filter).map(createConfig)
+
 console.log(configs)
 
 export default configs
