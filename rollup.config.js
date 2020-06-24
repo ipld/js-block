@@ -49,7 +49,7 @@ const add = (pattern) => {
     }
   })))
 }
-add('tests/*.js')
+add('test/*.js')
 console.log(configs)
 
 export default configs
