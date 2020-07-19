@@ -16,8 +16,9 @@ const create = multiformats => {
   const reader = createReader(multiformats)
 
   const clone = obj => transform(obj, (result, value, key) => {
-    if (CID.isCID(value)) {
-      result[key] = value
+    const cid = CID.asCID(value)
+    if (cid) {
+      result[key] = cid
     } else if (isBinary(value)) {
       result[key] = copyBinary(value)
     } else if (typeof value === 'object' && value !== null) {
@@ -150,7 +151,7 @@ const create = multiformats => {
     async equals (block) {
       if (block === this) return true
       const cid = await this.cid()
-      if (CID.isCID(block)) return cid.equals(block)
+      if (CID.asCID(block)) return cid.equals(block)
       // https://github.com/bcoe/c8/issues/135
       /* c8 ignore next */
       return cid.equals(await block.cid())

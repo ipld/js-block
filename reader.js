@@ -12,15 +12,17 @@ export default multiformats => {
             const __path = _path.slice()
             __path.push(i)
             const o = val[i]
-            if (CID.isCID(o)) {
-              yield [__path.join('/'), o]
+            const cid = CID.asCID(o)
+            if (cid) {
+              yield [__path.join('/'), cid]
             } else if (typeof o === 'object') {
               yield * links(o, __path)
             }
           }
         } else {
-          if (CID.isCID(val)) {
-            yield [_path.join('/'), val]
+          const cid = CID.asCID(val)
+          if (cid) {
+            yield [_path.join('/'), cid]
           } else {
             yield * links(val, _path)
           }
@@ -35,14 +37,14 @@ export default multiformats => {
       _path.push(key)
       yield _path.join('/')
       const val = decoded[key]
-      if (val && typeof val === 'object' && !CID.isCID(val)) {
+      if (val && typeof val === 'object' && !CID.asCID(val)) {
         if (Array.isArray(val)) {
           for (let i = 0; i < val.length; i++) {
             const __path = _path.slice()
             __path.push(i)
             const o = val[i]
             yield __path.join('/')
-            if (typeof o === 'object' && !CID.isCID(o)) {
+            if (typeof o === 'object' && !CID.asCID(o)) {
               yield * tree(o, __path)
             }
           }
@@ -68,7 +70,8 @@ export default multiformats => {
         const key = path.shift()
         if (node[key] === undefined) { throw new Error(`Object has no property ${key}`) }
         node = node[key]
-        if (CID.isCID(node)) return { value: node, remaining: path.join('/') }
+        const cid = CID.asCID(node)
+        if (cid) return { value: cid, remaining: path.join('/') }
       }
       return { value: node }
     }

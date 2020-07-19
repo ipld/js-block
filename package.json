@@ -20,19 +20,19 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
-    "@ipld/dag-json": "^3.0.7",
+    "@ipld/dag-json": "^3.0.12",
     "globby": "^11.0.1",
     "hundreds": "0.0.7",
     "mocha": "^8.0.1",
     "polendina": "1.0.0",
-    "rollup": "^2.17.1",
+    "rollup": "^2.22.1",
     "standard": "^14.3.4"
   },
   "dependencies": {
-    "@ipld/dag-cbor": "1.1.2",
+    "@ipld/dag-cbor": "1.1.4",
     "class-is": "^1.1.0",
     "lodash.transform": "^4.6.0",
-    "multiformats": "^1.1.6"
+    "multiformats": "^2.1.0"
   },
   "repository": {
     "type": "git",
