@@ -186,6 +186,14 @@ describe('raw', () => {
 })
 
 describe('cid()', () => {
+  test('get code from cid', async () => {
+    let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
+    const c = block.code
+    same(c, 113)
+    block = Block.create(block.encode(), await block.cid())
+    same(block.code, 113)
+  })
+
   test('Block cid', async () => {
     let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
     let cid = await block.cid()

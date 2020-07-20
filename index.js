@@ -80,6 +80,7 @@ const create = multiformats => {
     }
 
     get code () {
+      if (this.opts.cid) return this.opts.cid.code
       if (!this.opts.code) {
         this.opts.code = multicodec.get(this.codec).code
       }
@@ -97,8 +98,7 @@ const create = multiformats => {
     }
 
     _encode () {
-      const { encode } = multicodec.get(this.code)
-      this._encoded = this.opts.data || encode(this.opts.source)
+      this._encoded = this.opts.data || multicodec.get(this.code).encode(this.opts.source)
     }
 
     encode () {
@@ -151,7 +151,7 @@ const create = multiformats => {
     async equals (block) {
       if (block === this) return true
       const cid = await this.cid()
-      if (CID.asCID(block)) return cid.equals(block)
+      if (CID.asCID(block)) return cid.equals(CID.asCID(block))
       // https://github.com/bcoe/c8/issues/135
       /* c8 ignore next */
       return cid.equals(await block.cid())
