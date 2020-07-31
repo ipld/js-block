@@ -31,6 +31,7 @@ const create = multiformats => {
   class Block {
     constructor (opts) {
       if (!opts) throw new Error('Block options are required')
+      if (opts.cid) opts.cid = CID.asCID(opts.cid)
       if (typeof opts.codec === 'number') {
         opts.code = opts.codec
         opts.codec = multicodec.get(opts.code).name
