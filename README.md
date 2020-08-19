@@ -5,7 +5,7 @@ implementing a new codec you can get everything you need from the Block API: enc
 decoding, cid creation w/ hashing.
 
 ```javascript
-import Block from '@ipld/block/defaults.js'
+import Block from '@ipld/block/defaults'
 
 const b1 = Block.encoder({ hello: 'world' }, 'dag-cbor')
 
