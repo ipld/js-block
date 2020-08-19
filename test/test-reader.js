@@ -1,12 +1,12 @@
 /* globals it */
-import Block from '../basics.js'
+import Block from '@ipld/block/basics'
 import assert from 'assert'
 const { CID } = Block
 
 const same = assert.deepStrictEqual
 const test = it
 
-const link = new CID('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')
+const link = CID.from('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')
 
 const fixture = {
   n: null,

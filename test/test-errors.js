@@ -1,7 +1,7 @@
 'use strict'
 /* globals it */
-import createBlock from '../index.js'
-import multiformats from 'multiformats/basics.js'
+import createBlock from '@ipld/block'
+import multiformats from 'multiformats/basics'
 import assert from 'assert'
 
 const Block = createBlock(multiformats)

@@ -63,7 +63,7 @@ const create = multiformats => {
     async cid () {
       if (this.opts.cid) return this.opts.cid
       const hash = await multihash.hash(this.encodeUnsafe(), this.opts.algo)
-      const cid = new CID(1, this.code, hash)
+      const cid = CID.create(1, this.code, hash)
       this.opts.cid = cid
       // https://github.com/bcoe/c8/issues/135
       /* c8 ignore next */
@@ -163,7 +163,7 @@ const create = multiformats => {
   BlockWithIs.encoder = (source, codec, algo) => new BlockWithIs({ source, codec, algo })
   BlockWithIs.decoder = (data, codec, algo) => new BlockWithIs({ data, codec, algo })
   BlockWithIs.create = (data, cid) => {
-    if (typeof cid === 'string') cid = new CID(cid)
+    if (typeof cid === 'string') cid = CID.from(cid)
     return new BlockWithIs({ data, cid })
   }
   BlockWithIs.multiformats = multiformats

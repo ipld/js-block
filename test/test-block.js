@@ -1,10 +1,10 @@
 'use strict'
 /* globals it, describe */
-import multiformats from 'multiformats/basics.js'
-import create from '../index.js'
+import multiformats from 'multiformats/basics'
+import create from '@ipld/block'
 import dagjson from '@ipld/dag-json'
 import dagcbor from '@ipld/dag-cbor'
-import base58 from 'multiformats/bases/base58.js'
+import base58 from 'multiformats/bases/base58'
 import assert from 'assert'
 
 const { bytes, multicodec, multibase, CID } = multiformats
@@ -114,7 +114,7 @@ for (const codec of [dagjson, dagcbor]) {
         })
 
         test('decode deep object', done => {
-          const cid = new CID('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
+          const cid = CID.from('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
           const o = { a: { b: [cid], c: fromString('x') } }
           const block = Block.encoder(o, id)
           const decoded = block.decode()
