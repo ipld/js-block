@@ -26,7 +26,7 @@ test('get path', () => {
   same(one, 1)
   const incomplete = reader.get('l/one/two')
   same(incomplete.remaining, 'one/two')
-  assert.ok(CID.isCID(incomplete.value))
+  assert.ok(CID.asCID(incomplete.value))
 })
 
 /*
@@ -45,7 +45,7 @@ test('links', () => {
   const links = Array.from(reader.links())
   const keys = new Set(links.map(a => a[0]))
   same(keys, new Set(['a/2', 'a/4/l', 'l', 'o/l']))
-  links.forEach(l => assert.ok(CID.isCID(l[1])))
+  links.forEach(l => assert.ok(CID.asCID(l[1])))
 })
 
 test('tree', () => {
