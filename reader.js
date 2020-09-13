@@ -2,6 +2,7 @@ export default multiformats => {
   const { CID } = multiformats
   /* eslint-disable max-depth */
   const links = function * (decoded, path = []) {
+    if (typeof decoded !== 'object' || !decoded) return
     for (const key of Object.keys(decoded)) {
       const _path = path.slice()
       _path.push(key)
@@ -32,6 +33,7 @@ export default multiformats => {
   }
 
   const tree = function * (decoded, path = []) {
+    if (typeof decoded !== 'object' || !decoded) return
     for (const key of Object.keys(decoded)) {
       const _path = path.slice()
       _path.push(key)

@@ -40,7 +40,7 @@ const create = multiformats => {
           typeof opts.data === 'undefined') {
         throw new Error('Block instances must be created with either an encode source or data')
       }
-      if (opts.source && !opts.codec && !opts.code) {
+      if (typeof opts.source !== 'undefined' && !opts.codec && !opts.code) {
         throw new Error('Block instances created from source objects must include desired codec')
       }
       if (opts.data && !opts.cid && !opts.codec && !opts.code) {
@@ -113,7 +113,7 @@ const create = multiformats => {
     }
 
     _decode () {
-      if (this.opts.source) this._decoded = this.opts.source
+      if (typeof this.opts.source !== 'undefined') this._decoded = this.opts.source
       else {
         const { decode } = multicodec.get(this.code)
         this._decoded = decode(this._encoded || this.opts.data)

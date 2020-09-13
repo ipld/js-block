@@ -79,3 +79,19 @@ test('property not found', () => {
   }
   assert(threw)
 })
+
+test('null', () => {
+  const reader = Block.encoder(null, 'dag-cbor').reader()
+  const links = Array.from(reader.links())
+  const tree = Array.from(reader.tree())
+  same(links.length, 0)
+  same(tree.length, 0)
+})
+
+test('true', () => {
+  const reader = Block.encoder(true, 'dag-cbor').reader()
+  const links = Array.from(reader.links())
+  const tree = Array.from(reader.tree())
+  same(links.length, 0)
+  same(tree.length, 0)
+})
