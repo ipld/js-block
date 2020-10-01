@@ -1,5 +1,4 @@
-export default multiformats => {
-  const { CID } = multiformats
+export default CID => {
   /* eslint-disable max-depth */
   const links = function * (decoded, path = []) {
     if (typeof decoded !== 'object' || !decoded) return

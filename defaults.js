@@ -1,5 +1,6 @@
-import Block from './basics.js'
-import dagcbor from '@ipld/dag-cbor'
-Block.multiformats.multicodec.add(dagcbor)
+import Block from './index.js'
+import { codec as multicodec } from 'multiformats'
+import * as dagcbor from '@ipld/dag-cbor'
+Block.add(multicodec.codec(dagcbor))
 
 export default Block

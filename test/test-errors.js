@@ -1,10 +1,8 @@
 'use strict'
 /* globals it */
-import createBlock from '@ipld/block'
-import multiformats from 'multiformats/basics'
+import Block from '@ipld/block'
 import assert from 'assert'
 
-const Block = createBlock(multiformats)
 const same = assert.deepStrictEqual
 const test = it
 
@@ -21,15 +19,15 @@ test('No block options', async () => {
 })
 
 test('No data or source', async () => {
-  await tryError(() => new Block({}), 'Block instances must be created with either an encode source or data')
+  await tryError(() => new Block({}), 'Cannot create block instance without cid or codec')
 })
 
 test('source only', async () => {
-  await tryError(() => new Block({ source: {} }), 'Block instances created from source objects must include desired codec')
+  await tryError(() => new Block({ source: {} }), 'Cannot create block instance without cid or codec')
 })
 
 test('data only', async () => {
-  await tryError(() => new Block({ data: Buffer.from('asdf') }), 'Block instances created from data must include cid or codec')
+  await tryError(() => new Block({ data: Buffer.from('asdf') }), 'Cannot create block instance without cid or codec')
 })
 
 test('set opts', async () => {
