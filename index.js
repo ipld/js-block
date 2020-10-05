@@ -99,7 +99,7 @@ class Block {
 
   async equals (block) {
     if (block === this) return true
-    if (block.asBlock !== block) throw new Error('Not a block instance')
+    if (block.asBlock !== block) return false
     const [a, b] = await Promise.all([this.cid(), block.cid()])
     return a.equals(b)
   }
