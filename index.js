@@ -18,7 +18,7 @@ const copyBinary = value => {
 const clone = obj => transform(obj, (result, value, key) => {
   const cid = CID.asCID(value)
   if (cid) {
-    result[key] = value
+    result[key] = cid
   } else if (isBinary(value)) {
     result[key] = copyBinary(value)
   } else if (typeof value === 'object' && value !== null) {
