@@ -130,7 +130,6 @@ Block.createUnsafe = (data, cid, { hasher, codec } = {}) => {
   return new Block({ data, cid, codec, hasher: hasher || null })
 }
 Block.create = async (data, cid, { hasher, codec } = {}) => {
-  if (typeof cid === 'string') cid = CID.parse(cid)
   hasher = hasher || Block.codec.get(cid.multihash.code)
   if (!hasher) {
     const { code } = cid.multihash.code
