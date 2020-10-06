@@ -45,6 +45,31 @@ class Block {
     setImmutable(this, 'asBlock', this)
   }
 
+  decodeUnsafe () {
+    if (typeof this.opts._source !== 'undefined') return this._source
+    throw new Error('Block created without a decoded state')
+  }
+
+  decode () {
+    const decoded = this.decodeUnsafe()
+    if (decoded === null) return null
+    if (isBinary(decoded)) return copyBinary(decoded)
+    if (immutableTypes.has(typeof decoded) || decoded === null) {
+      return decoded
+    }
+    return clone(decoded)
+  }
+
+  encodeUnsafe () {
+    if (this._data) return this._data
+    throw new Error('Block created without an encoded state')
+  }
+
+  encode () {
+    const data = this.encodeUnsafe()
+    return copyBinary(data)
+  }
+
   async cid () {
     if (this._cid) return this._cid
     const hash = await this._hasher.digest(this.encodeUnsafe())
@@ -58,41 +83,6 @@ class Block {
     return this._codec.code
   }
 
-  encode () {
-    const data = this.encodeUnsafe()
-    return copyBinary(data)
-  }
-
-  encodeUnsafe () {
-    if (this._data) return this._data
-    if (!this._codec) {
-      throw new Error('Do not have codec implemention in this Block interface')
-    }
-    const data = this._codec.encode(this._source)
-    setImmutable(this, '_data', data)
-    return data
-  }
-
-  decodeUnsafe () {
-    if (typeof this.opts._source !== 'undefined') return this._source
-    if (!this._codec) {
-      throw new Error('Do not have codec implemention in this Block interface')
-    }
-    const source = this._codec.decode(this._data)
-    setImmutable(this, '_source', source)
-    return source
-  }
-
-  decode () {
-    const decoded = this.decodeUnsafe()
-    if (decoded === null) return null
-    if (isBinary(decoded)) return copyBinary(decoded)
-    if (immutableTypes.has(typeof decoded) || decoded === null) {
-      return decoded
-    }
-    return clone(decoded)
-  }
-
   reader () {
     return reader(this.decodeUnsafe())
   }
@@ -102,6 +92,29 @@ class Block {
     if (block.asBlock !== block) return false
     const [a, b] = await Promise.all([this.cid(), block.cid()])
     return a.equals(b)
+  }
+}
+
+class BlockDecoder extends Block {
+  decodeUnsafe () {
+    if (typeof this.opts._source !== 'undefined') return this._source
+    if (!this._codec) {
+      throw new Error('Do not have codec implemention in this Block interface')
+    }
+    const source = this._codec.decode(this._data)
+    setImmutable(this, '_source', source)
+    return source
+  }
+}
+class BlockEncoder extends Block {
+  encodeUnsafe () {
+    if (this._data) return this._data
+    if (!this._codec) {
+      throw new Error('Do not have codec implemention in this Block interface')
+    }
+    const data = this._codec.encode(this._source)
+    setImmutable(this, '_data', data)
+    return data
   }
 }
 
@@ -117,17 +130,17 @@ Block.add(raw)
 Block.encoder = (source, codec, hasher = sha256) => {
   if (typeof codec === 'string') codec = Block.codecs.get(codec)
   if (!codec) throw new Error('Missing codec')
-  return new Block({ source, codec, hasher })
+  return new BlockEncoder({ source, codec, hasher })
 }
 Block.decoder = (data, codec, hasher = sha256) => {
   if (typeof codec === 'string') codec = Block.codecs.get(codec)
   if (!codec) throw new Error('Missing codec')
-  return new Block({ data, codec, hasher })
+  return new BlockDecoder({ data, codec, hasher })
 }
 Block.createUnsafe = (data, cid, { hasher, codec } = {}) => {
   codec = codec || Block.codecs.get(cid.code)
   if (!codec) throw new Error(`Missing codec ${cid.code}`)
-  return new Block({ data, cid, codec, hasher: hasher || null })
+  return new BlockDecoder({ data, cid, codec, hasher: hasher || null })
 }
 Block.create = async (data, cid, { hasher, codec } = {}) => {
   hasher = hasher || Block.codec.get(cid.multihash.code)
