@@ -1,3 +1,5 @@
+***This project is currently archived and is not recommended for use.*** Please see https://github.com/multiformats/js-multiformats for the latest iteration of this design pattern and for ongoing development of the basic IPLD building-blocks.
+
 # Block API
 
 The `Block` API is the single endpoint for authoring IPLD data structures. Unless you're
