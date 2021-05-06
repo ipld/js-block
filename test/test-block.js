@@ -1,27 +1,24 @@
 'use strict'
 /* globals it, describe */
-import multiformats from 'multiformats/basics'
-import create from '@ipld/block'
-import dagjson from '@ipld/dag-json'
-import dagcbor from '@ipld/dag-cbor'
-import base58 from 'multiformats/bases/base58'
+import Block from '@ipld/block'
+// import dagjson from '@ipld/dag-json'
+import * as dagcbor from '@ipld/dag-cbor'
+import { base58btc } from 'multiformats/bases/base58'
+import { sha512 } from 'multiformats/hashes/sha2'
+import { bytes, CID, codec as multicodec } from 'multiformats'
 import assert from 'assert'
 
-const { bytes, multicodec, multibase, CID } = multiformats
 const { fromString, toString } = bytes
 const isBinary = o => {
   if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') return true
   return false
 }
-const Block = create(multiformats)
 const same = assert.deepStrictEqual
 const test = it
 
-multibase.add(base58)
-
-for (const codec of [dagjson, dagcbor]) {
-  multiformats.add(codec)
-  const { name, code } = codec(multiformats)
+for (const codec of [dagcbor]) {
+  Block.add(multicodec.codec(codec))
+  const { name, code, encode } = codec
   describe(name, () => {
     for (const id of [name, code]) {
       describe(`w/ ${typeof id === 'string' ? 'name' : 'code'}`, () => {
@@ -29,7 +26,7 @@ for (const codec of [dagjson, dagcbor]) {
           const block = Block.encoder({ hello: 'world' }, id)
           const encoded = block.encodeUnsafe()
           assert.ok(isBinary(encoded))
-          const comp = multicodec.encode({ hello: 'world' }, id)
+          const comp = encode({ hello: 'world' })
           same(encoded, comp)
           done()
         })
@@ -67,7 +64,7 @@ for (const codec of [dagjson, dagcbor]) {
         })
 
         test('Block decode', async () => {
-          const data = multicodec.encode({ hello: 'world' }, id)
+          const data = encode({ hello: 'world' })
           let block = Block.decoder(data, id)
           let decoded = block.decode()
           same(decoded, { hello: 'world' })
@@ -114,7 +111,7 @@ for (const codec of [dagjson, dagcbor]) {
         })
 
         test('decode deep object', done => {
-          const cid = CID.from('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
+          const cid = CID.parse('zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
           const o = { a: { b: [cid], c: fromString('x') } }
           const block = Block.encoder(o, id)
           const decoded = block.decode()
@@ -188,8 +185,7 @@ describe('raw', () => {
 describe('cid()', () => {
   test('get code from cid', async () => {
     let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
-    const c = block.code
-    same(c, 113)
+    same(block.code, 113)
     block = Block.create(block.encode(), await block.cid())
     same(block.code, 113)
   })
@@ -197,16 +193,17 @@ describe('cid()', () => {
   test('Block cid', async () => {
     let block = Block.encoder({ hello: 'world' }, 'dag-cbor')
     let cid = await block.cid()
-    same(cid.toString('base58btc'), 'zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
-    block = Block.encoder({ hello: 'world' }, 'dag-cbor', 'sha2-512')
+    same(cid.toString(base58btc), 'zdpuAtX7ZibcWdSKQwiDCkPjWwRvtcKCPku9H7LhgA4qJW4Wk')
+    block = Block.encoder({ hello: 'world' }, 'dag-cbor', sha512)
     cid = await block.cid()
-    same(cid.toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    same(cid.toString(base58btc), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     block = Block.create(await block.encode(), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
-    same((await block.cid()).toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    same((await block.cid()).toString(base58btc), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     same(block.codec, 'dag-cbor')
+    Block.add(sha512)
     same(await block.validate(), true)
     block = Block.create(await block.encode(), cid)
-    same((await block.cid()).toString('base58btc'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
+    same((await block.cid()).toString(base58btc), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     same(block.codec, 'dag-cbor')
     block = Block.create(fromString('asdf'), 'zBwW8ZGUCK3yY7Xxmqzm1sCjzE2Z8msvEdRCX1s9RKS61i5V8owNmCwfazw6hfetkzLW4KejDt1i566b8yEYuWAQi2Yyr')
     let threw = true
@@ -214,7 +211,7 @@ describe('cid()', () => {
       await block.validate()
       threw = false
     } catch (e) {
-      if (e.message !== 'Buffer does not match hash') throw e
+      if (e.message !== 'Bytes do not match') throw e
     }
     same(threw, true)
   })
